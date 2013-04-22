@@ -1,0 +1,125 @@
+html {
+	margin: 0; padding: 0;
+	width: 100%; height: 100%;		
+}
+
+body {
+	margin: 0; padding: 0;
+	width: 100%; height: 100%;
+	background: black url('../media/images/black_iced_coffee.jpg') repeat center center;
+}
+
+body {
+	-moz-animation:zoom 10s infinite alternate ease;
+	-webkit-animation:zoom 10s infinite alternate ease;
+	-o-animation:zoom 10s infinite alternate ease;
+	-ms-animation:zoom 10s infinite alternate ease;
+	animation:zoom 10s infinite alternate ease;
+}
+
+h1 {
+
+	/*
+	-moz-animation:fade .5s infinite alternate ease;
+	-webkit-animation:fade .5s infinite alternate ease;
+	-o-animation:fade .5s infinite alternate ease;
+	-ms-animation:fade .5s infinite alternate ease;
+	animation:fade .5s infinite alternate ease;
+	*/
+
+	-moz-animation:textzoom .5s infinite alternate ease;
+	-webkit-animation:textzoom .5s infinite alternate ease;
+	-o-animation:textzoom .5s infinite alternate ease;
+	-ms-animation:textzoom .5s infinite alternate ease;
+	animation:textzoom .5s infinite alternate ease;
+
+	font-size: 400px;
+	margin: 0; padding: 0;
+	line-height: 50px;
+	text-align: center;
+	position: fixed;
+	width: 100%;
+	top: 50%;
+	margin-top: -60px;
+	left: 0px;
+	text-align: center;
+	text-shadow: 0 0 100px #000;
+	color: #620;
+	
+}
+
+@-moz-keyframes zoom {
+	0% { background-size: 100% auto; }
+	100% { background-size: .25% auto; }
+}
+@-webkit-keyframes zoom {
+	0% { background-size: 100% auto; }
+	100% { background-size: .25% auto; }
+}
+@-o-keyframes zoom {
+	0% { background-size: 100% auto; }
+	100% { background-size: .25% auto; }
+}
+@-ms-keyframes zoom {
+	0% { background-size: 100% auto; }
+	100% { background-size: .25% auto; }
+}
+@keyframes zoom {
+	0% { background-size: 100% auto; }
+	100% { background-size: .25% auto; }
+}
+
+/**
+	* Fade in and out
+	*/
+@-moz-keyframes fade {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-webkit-keyframes fade {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-o-keyframes fade {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@-ms-keyframes fade {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+@keyframes fade {
+	0% { opacity: 1; }
+	100% { opacity: 0; }
+}
+
+/* text scale */
+
+@-moz-keyframes textzoom {
+	0% { font-size: 300px; }
+	100% { font-size: 1px; }
+}
+@-webkit-keyframes textzoom {
+	0% { font-size: 300px; }
+	100% { font-size: 1px; }
+}
+@-o-keyframes textzoom {
+	0% { font-size: 300px; }
+	100% { font-size: 1px; }
+}
+@-ms-keyframes textzoom {
+	0% { font-size: 300px; }
+	100% { font-size: 1px; }
+}
+@keyframes textzoom {
+	0% { font-size: 300px; }
+	100% { font-size: 1px; }
+}
+
+.overlay {
+	position: fixed;	
+	top: 0; left: 0;
+	width: 100%; height: 100%;
+	margin: 0; padding: 0;
+	opacity: .10;
+}
