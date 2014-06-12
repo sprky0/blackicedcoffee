@@ -41,6 +41,16 @@ require(['jquery'],function($){
 
 	// oculus mode or not?
 	var oculus_mode = window.location.hash == "#oculus" ? true : false;
+	var show_log = false;
+
+	var spin_deg = .5;
+	var spin_deg2 = 1;
+	var zoom_out = 1.03;
+	var zoom_in = 0.97;
+	var dir = zoom_in;
+	var zooming = true;
+	var spinning = true;
+	var log_entries = {z : 0};
 
 	if (oculus_mode) {
 		$("a.computer").removeClass('hidden');
@@ -50,6 +60,7 @@ require(['jquery'],function($){
 		$("a.headset").removeClass('hidden');
 	}
 
+	var $log = $("#log");
 	var width = window.innerWidth;
 	var height = window.innerHeight;
 	var $container = $('<div/>').attr("id","main").addClass("full").appendTo("body");
@@ -58,14 +69,13 @@ require(['jquery'],function($){
 	var renderer = new THREE.WebGLRenderer();
 	// var renderer = new THREE.CanvasRenderer();
 	renderer.setSize(width, height);
+	$container.get(0).appendChild( renderer.domElement );
 
-	// var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100 );
-	var camera = new THREE.PerspectiveCamera(60, width / height, 1, 20000);
+	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100 );
+	// var camera = new THREE.PerspectiveCamera(60, width / height, 1, 20000);
 
 	var effect = new THREE.OculusRiftEffect(renderer, {worldScale: 100});
 	effect.setSize(width, height);
-
-	$container.get(0).appendChild( renderer.domElement );
 
 	var light = new THREE.AmbientLight(0xFFFFFF);
 	scene.add(light);
@@ -75,13 +85,19 @@ require(['jquery'],function($){
 	texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set( 5000, 5000 );
 
-	// var material = new THREE.MeshBasicMaterial({
-	var material =  new THREE.MeshPhongMaterial({
+	var texture2 = THREE.ImageUtils.loadTexture( 'media/images/black_iced_coffee256.jpg' );
+	texture2.wrapS = THREE.RepeatWrapping;
+	texture2.wrapT = THREE.RepeatWrapping;
+	texture2.repeat.set( 2, 2 );
+
+	var material = new THREE.MeshBasicMaterial({
+	// var material =  new THREE.MeshPhongMaterial({
+	// var material = new THREE.MeshLambertMaterial({
 		map : texture,
-		ambient: 0xFFFFFF,
-		color: 0xFFFFFF,
-		specular: 0xffffff,
-		shininess: 100,
+		// ambient: 0xFFFFFF,
+		// color: 0xFFFFFF,
+		// specular: 0xffffff,
+		// shininess: 100,
 		shading: THREE.SmoothShading
 	});
 
@@ -91,21 +107,63 @@ require(['jquery'],function($){
 		material
 		// new THREE.MeshNormalMaterial()
 	);
-  plane.overdraw = true;
+  // plane.overdraw = true;
   scene.add(plane);
+
+
+	// plane
+	var plane2 = new THREE.Mesh(
+		new THREE.PlaneGeometry(5000, 5000),
+		material
+		// new THREE.MeshNormalMaterial()
+	);
+	plane2.material.side = THREE.DoubleSide;
+	plane2.position.z = 100;
+	plane2.overdraw = true;
+	scene.add(plane2);
+
+
 
 	camera.position.z = 50;
 
 	// controls = new THREE.TrackballControls( camera );
 	// controls.target.set( 0, 0, 0 )
 
-	var spin_deg = .5;
-	var zoom_out = 1.03;
-	var zoom_in = 0.97;
-	var dir = zoom_in;
-	var zooming = true;
-	var spinning = true;
-	var log_entries = {z : camera.position.z};
+	function randomBetween(min, max) {
+		return Math.random() * (max - min) + min;
+	}
+
+	var spheres = [];
+
+	function addSpheres() {
+
+		for (var i = 0; i < 200; i++) {
+
+			console.log( 'add sphere' );
+
+			var _material = new THREE.MeshBasicMaterial({
+				map: texture2
+			});
+      var sphere = new THREE.Mesh(new THREE.SphereGeometry(randomBetween(.1,2), 20, 20), _material);
+      sphere.overdraw = true;
+			sphere.position.x = randomBetween(-100,100);
+			sphere.position.y = randomBetween(-100,100);
+			sphere.position.z = Math.random() * 100;
+      scene.add(sphere);
+
+			spheres.push({
+				object : sphere,
+				xmove : 0,
+				ymove : 0,
+				zmove : -.1
+			});
+
+		}
+
+	}
+
+	addSpheres();
+
 
 	function log() {
 		$log.empty();
@@ -134,9 +192,29 @@ require(['jquery'],function($){
 		}
 		if (spinning) {
 			camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), degToRad(spin_deg));
-			// camera.rotateOnAxis(new THREE.Vector3(0, 1, 0), degInRad(spin_deg / 2));
-			// camera.rotateOnAxis(new THREE.Vector3(1, 0, 0), degInRad(spin_deg / 2));
+			camera.rotateOnAxis(new THREE.Vector3(0, 1, 0), degToRad(1));
+			camera.rotateOnAxis(new THREE.Vector3(1, 0, 1), degToRad( Math.sin(spin_deg2) ));
 			// spin_deg *= .99;
+		}
+
+		for (var i = 0; i < spheres.length; i++) {
+
+			var s = spheres[i];
+
+			if (s.xmove != 0) {
+				s.object.position.z += s.xmove;
+			}
+			if (s.ymove != 0) {
+				s.object.position.y += s.ymove;
+			}
+			if (s.zmove != 0) {
+				s.object.position.z += s.zmove;
+				if (s.object.position.z < 0) {
+					s.zmove *= -1;
+				}
+				s.zmove -= .01;
+			}
+
 		}
 
 		if (oculus_mode) {
@@ -146,7 +224,11 @@ require(['jquery'],function($){
 		}
 		requestAnimationFrame(render);
 
-		log();
+		spin_deg2 += .01;
+
+		if (show_log) {
+			log();
+		}
 	}
 
 	function resize() {
@@ -160,7 +242,9 @@ require(['jquery'],function($){
 		effect,setSize(width,height);
 	}
 
-	var $log = $("#log");
+	if (show_log) {
+		$log.removeClass('hidden');
+	}
 
 	$(window).on("resize",resize);
 
