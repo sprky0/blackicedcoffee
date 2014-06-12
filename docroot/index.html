@@ -1,23 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Black Iced Coffee: 3D</title>
+	<title>Black Iced Coffee</title>
 	<link rel="stylesheet" href="css/screen.css" />
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 </head>
-<body id="doc" class="zoom">
+<body>
 
-	<h1>Black<br/>Iced<br/>Coffee</h1>
+	<h1 class="visuallyhidden">Black<br/>Iced<br/>Coffee</h1>
+	<a class="icon headset" href="#oculus">Oculus Rift Mode</a>
+	<a class="icon computer hidden" href="#desktop">Desktop Mode</a>
 
-	<div class="overlay"></div>
-
-	<a class="icon headset" href="3d.html">Side by Side 3d (for Oculus Rift)</a>
-
+	<!--
 	<audio autoplay loop>
 		<source src="media/audio/buedyful.ogg" type="audio/ogg">
 		<source src="media/audio/buedyful.mp3" type="audio/mpeg">
 	</audio>
+	-->
 
+	<div id="log"></div>
 	<!-- concept by mikerz, coded by sprky0 -->
+	<script src="vendor/threejs/build/three.min.js"></script>
+	<script src="vendor/oculus/index.js"></script>
+	<script src="vendor/requirejs/require.js" data-main="js/main"></script>
 
 </body>
 </html>

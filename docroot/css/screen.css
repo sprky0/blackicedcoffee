@@ -1,6 +1,35 @@
-html {
+html, body {
 	margin: 0; padding: 0;
-	width: 100%; height: 100%;		
+	width: 100%; height: 100%;
+}
+
+#log {
+	font-family: courier;
+	white-space: pre;
+	z-index: 10000;
+	color: #00ff00;
+	width: 200px;
+	height: 200px;
+	background-color: rgba(0,0,0,.5);
+	position: fixed;
+	left: 10px;
+	top: 10px;
+	padding: 10px;
+}
+
+canvas {
+	display: block;
+	margin: 0;
+	padding: 0;
+}
+
+.hidden {
+	display: none;
+}
+
+.full {
+	margin: 0; padding: 0;
+	width: 100%; height: 100%;
 }
 
 .left {
@@ -16,120 +45,16 @@ html {
 }
 
 .clear {
-	clear:both;	
+	clear:both;
 }
 
-body {
-	margin: 0; padding: 0;
-	width: 100%; height: 100%;
-}
-
-.zoom {
-	background: black url('../media/images/black_iced_coffee.jpg') repeat center center;
-	-moz-animation:zoom 10s infinite alternate ease;
-	-webkit-animation:zoom 10s infinite alternate ease;
-	-o-animation:zoom 10s infinite alternate ease;
-	-ms-animation:zoom 10s infinite alternate ease;
-	animation:zoom 10s infinite alternate ease;
-}
-
-h1 {
-	-moz-animation:textzoom .5s infinite alternate ease;
-	-webkit-animation:textzoom .5s infinite alternate ease;
-	-o-animation:textzoom .5s infinite alternate ease;
-	-ms-animation:textzoom .5s infinite alternate ease;
-	animation:textzoom .5s infinite alternate ease;
-
-	font-size: 400px;
-	margin: 0; padding: 0;
-	line-height: 50px;
-	text-align: center;
-	position: absolute;
-	width: 100%;
-	top: 50%;
-	margin-top: -60px;
-	left: 0px;
-	text-align: center;
-	text-shadow: 0 0 100px #000;
-	color: #620;
-}
-
-@-moz-keyframes zoom {
-	0% { background-size: 100% auto; }
-	100% { background-size: .25% auto; }
-}
-@-webkit-keyframes zoom {
-	0% { background-size: 100% auto; }
-	100% { background-size: .25% auto; }
-}
-@-o-keyframes zoom {
-	0% { background-size: 100% auto; }
-	100% { background-size: .25% auto; }
-}
-@-ms-keyframes zoom {
-	0% { background-size: 100% auto; }
-	100% { background-size: .25% auto; }
-}
-@keyframes zoom {
-	0% { background-size: 100% auto; }
-	100% { background-size: .25% auto; }
-}
-
-/**
-	* Fade in and out
-	*/
-@-moz-keyframes fade {
-	0% { opacity: 1; }
-	100% { opacity: 0; }
-}
-@-webkit-keyframes fade {
-	0% { opacity: 1; }
-	100% { opacity: 0; }
-}
-@-o-keyframes fade {
-	0% { opacity: 1; }
-	100% { opacity: 0; }
-}
-@-ms-keyframes fade {
-	0% { opacity: 1; }
-	100% { opacity: 0; }
-}
-@keyframes fade {
-	0% { opacity: 1; }
-	100% { opacity: 0; }
-}
-
-/* text scale */
-
-@-moz-keyframes textzoom {
-	0% { font-size: 300px; }
-	100% { font-size: 1px; }
-}
-@-webkit-keyframes textzoom {
-	0% { font-size: 300px; }
-	100% { font-size: 1px; }
-}
-@-o-keyframes textzoom {
-	0% { font-size: 300px; }
-	100% { font-size: 1px; }
-}
-@-ms-keyframes textzoom {
-	0% { font-size: 300px; }
-	100% { font-size: 1px; }
-}
-@keyframes textzoom {
-	0% { font-size: 300px; }
-	100% { font-size: 1px; }
-}
-
-.overlay {
-	position: absolute;
-	top: 0; left: 0;
-	width: 100%; height: 100%;
-	margin: 0; padding: 0;
-	opacity: .10;
-	background: transparent url('../media/images/spin.gif') center center no-repeat;
-	background-size: 100%; 
+.visuallyhidden {
+	height: 0;
+	width: 0;
+	display: block;
+	opacity: 0;
+	margin: 0;
+	padding: 0;
 }
 
 .oculus {
@@ -157,7 +82,7 @@ a.icon {
 }
 
 a.icon:hover {
-	background-color: #f00;	
+	background-color: #f00;
 }
 
 a.headset {

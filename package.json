@@ -1,5 +1,5 @@
 {
-  "name": "black iced coffee",
+  "name": "black-iced-coffee",
   "private": true,
   "devDependencies": {
     "connect": "^2.19.3",

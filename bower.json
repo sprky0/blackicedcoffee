@@ -1,0 +1,32 @@
+{
+  "name": "blackicedcoffee",
+  "version": "2.0.0",
+  "homepage": "blackicedcoffee.com",
+  "authors": [
+    "Avery Brooks <averyjamesbrooks@gmail.com>"
+  ],
+  "description": "black. iced. coffee.",
+  "keywords": [
+    "black",
+    "iced",
+    "coffee",
+    "animation",
+    "oculus",
+    "absurd"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "requirejs": "~2.1.14",
+    "jquery": "~2.1.1",
+    "threejs": "*",
+    "oculus" : "https://raw.githubusercontent.com/turban/webgl-terrain/master/lib/OculusRiftEffect.js"
+  }
+}
