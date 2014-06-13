@@ -18,7 +18,7 @@ require(['jquery','animationframe'],function($){
 	var zoom_in = 0.97;
 	var dir = zoom_in;
 	var zooming = true;
-	var spinning = false;
+	var spinning = true;
 	var flipping = true;
 	var log_entries = {z : 0};
 
@@ -50,19 +50,19 @@ require(['jquery','animationframe'],function($){
 	var effect = new THREE.OculusRiftEffect(renderer, {worldScale: 100});
 	effect.setSize(width, height);
 
-	var light = new THREE.AmbientLight(0xFFFFFF);
-	scene.add(light);
+	// eh
+	// var light = new THREE.AmbientLight(0xFFFFFF);
+	// scene.add(light);
 
 	var texture = THREE.ImageUtils.loadTexture( 'media/images/black_iced_coffee256.jpg' );
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
 	texture.repeat.set( 500, 500 );
 
-	var texture2 = THREE.ImageUtils.loadTexture( 'media/images/dude512.jpg' );
-	var texture3 = THREE.ImageUtils.loadTexture( 'media/images/dude256.jpg' );
-	// texture2.wrapS = THREE.RepeatWrapping;
-	// texture2.wrapT = THREE.RepeatWrapping;
-	// texture2.repeat.set( 1, 1 );
+	var faces = [];
+	faces.push( THREE.ImageUtils.loadTexture( 'media/images/dude512.jpg' ) );
+	faces.push( THREE.ImageUtils.loadTexture( 'media/images/dude256.jpg' ) );
+	faces.push( THREE.ImageUtils.loadTexture( 'media/images/beechsphere512.jpg' ) );
 
 	var material = new THREE.MeshBasicMaterial({
 	// var material =  new THREE.MeshPhongMaterial({
@@ -103,6 +103,10 @@ require(['jquery','animationframe'],function($){
 	// controls = new THREE.TrackballControls( camera );
 	// controls.target.set( 0, 0, 0 )
 
+	function randomFrom(arr) {
+		return arr[ Math.floor( Math.random() * arr.length) ];
+	}
+
 	function randomBetween(min, max) {
 		return Math.random() * (max - min) + min;
 	}
@@ -113,10 +117,8 @@ require(['jquery','animationframe'],function($){
 
 		for (var i = 0; i < 200; i++) {
 
-			console.log( 'add sphere' );
-
 			var _material = new THREE.MeshBasicMaterial({
-				map: (Math.random() > .5 ? texture2 : texture3)
+				map: randomFrom(faces),
 			});
       var sphere = new THREE.Mesh(new THREE.SphereGeometry(randomBetween(.05,6), 20, 20), _material);
       sphere.overdraw = true;
@@ -236,6 +238,23 @@ require(['jquery','animationframe'],function($){
 
 	$(window).on("resize",resize);
 
+	$(document).on("keyup",function(e){
+
+		switch(e.keyCode) {
+
+			default:
+				zooming = zooming ? false : true;
+				spinning = spinning ? false : true;
+				flipping = spinning ? false : true;
+
+				console.log(e.keyCode);
+
+				break;
+
+		}
+
+	});
+
 	$("a.computer").on("click",function(){
 		oculus_mode = false;
 		$("a.headset").removeClass('hidden');
@@ -252,7 +271,7 @@ require(['jquery','animationframe'],function($){
 		$(this).addClass("hidden");
 	});
 
-	// start loop!
+	// start loop!  maybe make a button?  or who cares really
 	render();
 
 });

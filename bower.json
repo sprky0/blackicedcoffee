@@ -27,6 +27,7 @@
     "requirejs": "~2.1.14",
     "jquery": "~2.1.1",
     "threejs": "*",
-    "oculus" : "https://raw.githubusercontent.com/turban/webgl-terrain/master/lib/OculusRiftEffect.js"
+    "oculus": "https://raw.githubusercontent.com/turban/webgl-terrain/master/lib/OculusRiftEffect.js",
+    "keycodes": "~0.2.2"
   }
 }
