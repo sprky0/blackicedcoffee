@@ -6,38 +6,7 @@ require.config({
 	}
 });
 
-require(['jquery'],function($){
-
-	// http://paulirish.com/2011/requestanimationframe-for-smart-animating/
-	// http://my.opera.com/emoller/blog/2011/12/20/requestanimationframe-for-smart-er-animating
-
-	// requestAnimationFrame polyfill by Erik Möller
-	// fixes from Paul Irish and Tino Zijdel
-
-	(function() {
-	    var lastTime = 0;
-	    var vendors = ['ms', 'moz', 'webkit', 'o'];
-	    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-	        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
-	        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
-	                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
-	    }
-
-	    if (!window.requestAnimationFrame)
-	        window.requestAnimationFrame = function(callback, element) {
-	            var currTime = new Date().getTime();
-	            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-	            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
-	              timeToCall);
-	            lastTime = currTime + timeToCall;
-	            return id;
-	        };
-
-	    if (!window.cancelAnimationFrame)
-	        window.cancelAnimationFrame = function(id) {
-	            clearTimeout(id);
-							};
-	}());
+require(['jquery','animationframe'],function($){
 
 	// oculus mode or not?
 	var oculus_mode = window.location.hash == "#oculus" ? true : false;
@@ -49,7 +18,8 @@ require(['jquery'],function($){
 	var zoom_in = 0.97;
 	var dir = zoom_in;
 	var zooming = true;
-	var spinning = true;
+	var spinning = false;
+	var flipping = true;
 	var log_entries = {z : 0};
 
 	if (oculus_mode) {
@@ -71,7 +41,7 @@ require(['jquery'],function($){
 	renderer.setSize(width, height);
 	$container.get(0).appendChild( renderer.domElement );
 
-	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 100 );
+	var camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 10000 );
 	// var camera = new THREE.PerspectiveCamera(60, width / height, 1, 20000);
 
 	var effect = new THREE.OculusRiftEffect(renderer, {worldScale: 100});
@@ -83,12 +53,13 @@ require(['jquery'],function($){
 	var texture = THREE.ImageUtils.loadTexture( 'media/images/black_iced_coffee256.jpg' );
 	texture.wrapS = THREE.RepeatWrapping;
 	texture.wrapT = THREE.RepeatWrapping;
-	texture.repeat.set( 5000, 5000 );
+	texture.repeat.set( 500, 500 );
 
-	var texture2 = THREE.ImageUtils.loadTexture( 'media/images/black_iced_coffee256.jpg' );
-	texture2.wrapS = THREE.RepeatWrapping;
-	texture2.wrapT = THREE.RepeatWrapping;
-	texture2.repeat.set( 2, 2 );
+	var texture2 = THREE.ImageUtils.loadTexture( 'media/images/dude512.jpg' );
+	var texture3 = THREE.ImageUtils.loadTexture( 'media/images/dude256.jpg' );
+	// texture2.wrapS = THREE.RepeatWrapping;
+	// texture2.wrapT = THREE.RepeatWrapping;
+	// texture2.repeat.set( 1, 1 );
 
 	var material = new THREE.MeshBasicMaterial({
 	// var material =  new THREE.MeshPhongMaterial({
@@ -103,7 +74,7 @@ require(['jquery'],function($){
 
   // plane
   var plane = new THREE.Mesh(
-		new THREE.PlaneGeometry(5000, 5000),
+		new THREE.PlaneGeometry(10000, 10000),
 		material
 		// new THREE.MeshNormalMaterial()
 	);
@@ -113,7 +84,7 @@ require(['jquery'],function($){
 
 	// plane
 	var plane2 = new THREE.Mesh(
-		new THREE.PlaneGeometry(5000, 5000),
+		new THREE.PlaneGeometry(10000, 10000),
 		material
 		// new THREE.MeshNormalMaterial()
 	);
@@ -142,9 +113,9 @@ require(['jquery'],function($){
 			console.log( 'add sphere' );
 
 			var _material = new THREE.MeshBasicMaterial({
-				map: texture2
+				map: (Math.random() > .5 ? texture2 : texture3)
 			});
-      var sphere = new THREE.Mesh(new THREE.SphereGeometry(randomBetween(.1,2), 20, 20), _material);
+      var sphere = new THREE.Mesh(new THREE.SphereGeometry(randomBetween(.05,6), 20, 20), _material);
       sphere.overdraw = true;
 			sphere.position.x = randomBetween(-100,100);
 			sphere.position.y = randomBetween(-100,100);
@@ -155,7 +126,10 @@ require(['jquery'],function($){
 				object : sphere,
 				xmove : 0,
 				ymove : 0,
-				zmove : -.1
+				zmove : -.1,
+				xrot : randomBetween(Math.random() * -.1, Math.random() * .1),
+				yrot : randomBetween(Math.random() * -.1, Math.random() * .1),
+				zrot : randomBetween(Math.random() * -.1, Math.random() * .1)
 			});
 
 		}
@@ -192,15 +166,26 @@ require(['jquery'],function($){
 		}
 		if (spinning) {
 			camera.rotateOnAxis(new THREE.Vector3(0, 0, 1), degToRad(spin_deg));
+			// spin_deg *= .99;
+		}
+		if (flipping) {
 			camera.rotateOnAxis(new THREE.Vector3(0, 1, 0), degToRad(1));
 			camera.rotateOnAxis(new THREE.Vector3(1, 0, 1), degToRad( Math.sin(spin_deg2) ));
-			// spin_deg *= .99;
 		}
 
 		for (var i = 0; i < spheres.length; i++) {
 
 			var s = spheres[i];
 
+			if (s.xrot != 0) {
+				s.object.rotation.x += s.xrot;
+			}
+			if (s.yrot != 0) {
+				s.object.rotation.y += s.yrot;
+			}
+			if (s.zrot != 0) {
+				s.object.rotation.z += s.zrot;
+			}
 			if (s.xmove != 0) {
 				s.object.position.z += s.xmove;
 			}
