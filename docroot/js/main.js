@@ -36,8 +36,11 @@ require(['jquery','animationframe'],function($){
 	var $container = $('<div/>').attr("id","main").addClass("full").appendTo("body");
 	var scene = new THREE.Scene();
 
-	var renderer = new THREE.WebGLRenderer();
+	scene.fog = new THREE.FogExp2( 0xFFFFFF, 0.0025 );
+
 	// var renderer = new THREE.CanvasRenderer();
+	var renderer = new THREE.WebGLRenderer();
+	renderer.setClearColor( 0xFFFFFF, 1);
 	renderer.setSize(width, height);
 	$container.get(0).appendChild( renderer.domElement );
 
