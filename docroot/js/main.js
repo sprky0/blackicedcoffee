@@ -2,15 +2,17 @@ require.config({
 	paths : {
 		jquery : '../vendor/jquery/dist/jquery.min',
 		three : '../vendor/threejs/build/three.min',
-		oculus  : '../vendor/oculus/index'
+		oculus  : '../vendor/oculus/index',
+		keycodes : '../vendor/keycodes/dist/index.min'
 	}
 });
 
-require(['jquery','animationframe'],function($){
+require(['jquery','keycodes','animationframe'],function($,keycodes){
 
 	// oculus mode or not?
 	var oculus_mode = window.location.hash == "#oculus" ? true : false;
 	var show_log = false;
+	var keys = keycodes.keys;
 
 	var spin_deg = .5;
 	var spin_deg2 = 1;
@@ -18,8 +20,9 @@ require(['jquery','animationframe'],function($){
 	var zoom_in = 0.97;
 	var dir = zoom_in;
 	var zooming = true;
-	var spinning = true;
-	var flipping = true;
+	var spinning = false;
+	var flipping = false;
+	var following = false;
 	var log_entries = {z : 0};
 
 	if (oculus_mode) {
@@ -75,14 +78,14 @@ require(['jquery','animationframe'],function($){
 		shading: THREE.SmoothShading
 	});
 
-  // plane
-  var plane = new THREE.Mesh(
+	// plane
+	var plane = new THREE.Mesh(
 		new THREE.PlaneGeometry(10000, 10000),
 		material
 		// new THREE.MeshNormalMaterial()
 	);
-  // plane.overdraw = true;
-  scene.add(plane);
+	// plane.overdraw = true;
+	scene.add(plane);
 
 
 	// plane
@@ -120,12 +123,12 @@ require(['jquery','animationframe'],function($){
 			var _material = new THREE.MeshBasicMaterial({
 				map: randomFrom(faces),
 			});
-      var sphere = new THREE.Mesh(new THREE.SphereGeometry(randomBetween(.05,6), 20, 20), _material);
-      sphere.overdraw = true;
+			var sphere = new THREE.Mesh(new THREE.SphereGeometry(randomBetween(.05,6), 20, 20), _material);
+			sphere.overdraw = true;
 			sphere.position.x = randomBetween(-100,100);
 			sphere.position.y = randomBetween(-100,100);
 			sphere.position.z = Math.random() * 100;
-      scene.add(sphere);
+			scene.add(sphere);
 
 			spheres.push({
 				object : sphere,
@@ -176,6 +179,13 @@ require(['jquery','animationframe'],function($){
 		if (flipping) {
 			camera.rotateOnAxis(new THREE.Vector3(0, 1, 0), degToRad(1));
 			camera.rotateOnAxis(new THREE.Vector3(1, 0, 1), degToRad( Math.sin(spin_deg2) ));
+		}
+
+		if (false !== following) {
+			camera.position.x = spheres[following].object.position.x;
+			camera.position.y = spheres[following].object.position.y;
+			camera.position.z = spheres[following].object.position.z + 10;
+			camera.lookAt( spheres[following].object.position );
 		}
 
 		for (var i = 0; i < spheres.length; i++) {
@@ -243,13 +253,54 @@ require(['jquery','animationframe'],function($){
 		switch(e.keyCode) {
 
 			default:
+				break;
+
+			case keys.F:
+				following = false === following ? 0 : false;
+				break;
+
+			case keys.S:
+				spinning = !spinning;
+				break;
+
+			case keys.Z:
+				zooming = !zooming;
+				break;
+
+			case keys.L:
+				flipping = !flipping;
+				break;
+
+			case keys.F:
+				spinning = false;
+				flipping = false;
+				zooming = false;
+				following = 0;
+				break;
+
+			case keys.UP:
+				if (false !== following) {
+					following++;
+					if (following >= spheres.length)
+						following = 0;
+				}
+				break;
+
+			case keys.DOWN:
+				if (false !== following) {
+					following--;
+					if (following < 0)
+						following =  spheres.length - 1;
+				}
+				break;
+
+			/*
 				zooming = zooming ? false : true;
 				spinning = spinning ? false : true;
 				flipping = spinning ? false : true;
-
-				console.log(e.keyCode);
-
+				// console.log(e.keyCode);
 				break;
+				*/
 
 		}
 
